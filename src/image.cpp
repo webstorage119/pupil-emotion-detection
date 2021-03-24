@@ -10,12 +10,12 @@
 namespace fs = std::filesystem;
 
 /**
- * @brief Reads full image path and pushes to image path vector as string.
+ * @brief Reads full image path and pushes to imagePath vector as string.
  * @param importPath
  */
 void Image::getImages(const string& importPath) {
     for (const auto &entry : fs::directory_iterator(importPath)) {
-        image_path.push_back(entry.path());
+        imagePath.push_back(entry.path());
     }
 }
 
@@ -23,18 +23,18 @@ void Image::getImages(const string& importPath) {
  * @brief Stdout full path of all imported images.
  */
 void Image::listImagePaths() {
-    for (const auto &i: image_path)
+    for (const auto &i: imagePath)
         std::cout << "Read success: " + i << std::endl;
 }
 
 /**
- * @brief Reads image paths from vector and converts into cv::Mat while loading the image then pushes to source images vector.
+ * @brief Reads image paths from vector and converts into cv::Mat while loading the image then pushes to rawImages vector.
  */
 void Image::toImage() {
-    for (const auto &i: image_path)
+    for (const auto &i: imagePath)
         try {
             cv::Mat image = cv::imread(i);
-            source_images.push_back(image);
+            rawImages.push_back(image);
         } catch (char const *s) {
             std::cout << s << std::endl;
         }
@@ -104,11 +104,10 @@ Mat Image::makeCanvas(vector<Mat> &vecMat, int windowHeight, int nRows) {
 }
 
 /**
- * @todo Detect Pupil.
- * @brief Load images from source_images vector. Find face then eyes then push to pupils vector.
+ * @brief Load images from rawImages vector. Find face then eyes then push to faceAndEye vector.
  * @param faceCascadePath, eyeCascadePath
  */
-void Image::toPupil(const string& faceCascadePath, const string& eyeCascadePath) {
+void Image::faceAndEyeDetection(const string& faceCascadePath, const string& eyeCascadePath) {
     const cv::String& face_cascade_path = faceCascadePath;
     const cv::String& eyes_cascade_path = eyeCascadePath;
     cv::CascadeClassifier faces_cascade;
@@ -122,7 +121,7 @@ void Image::toPupil(const string& faceCascadePath, const string& eyeCascadePath)
         std::cout << "Error loading face cascade." << std::endl;
     }
 
-    for (const auto &source: source_images) {
+    for (const auto &source: rawImages) {
         std::vector<cv::Rect> face;
         cv::Mat gray;
 
@@ -152,11 +151,11 @@ void Image::toPupil(const string& faceCascadePath, const string& eyeCascadePath)
             }
         }
 
-        pupils.push_back(source);
+        faceAndEye.push_back(source);
     }
 }
 
-/*
+/**
  * @brief Exports processed images to given path.
  * @param exportPath
  */
@@ -167,7 +166,7 @@ void Image::exportImages(const string &exportPath) {
 
     std::cout << "Deleted old files." << std::endl;
 
-    for (const auto &i: pupils) {
+    for (const auto &i: faceAndEye) {
         std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
         std::random_device rd;
         std::mt19937 generator(rd());

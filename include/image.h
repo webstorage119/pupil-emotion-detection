@@ -23,9 +23,9 @@ using cv::Mat;
 
 class Image {
 public:
-    vector<string> image_path;
-    vector<Mat> source_images;
-    vector<Mat> pupils;
+    vector<string> imagePath;
+    vector<Mat> rawImages;
+    vector<Mat> faceAndEye;
 
 public:
     void getImages(const string& importPath);
@@ -34,7 +34,7 @@ public:
 
     void toImage();
 
-    void toPupil(const string& faceCascadePath, const string& eyeCascadePath);
+    void faceAndEyeDetection(const string& faceCascadePath, const string& eyeCascadePath);
 
     void exportImages(const string& exportPath);
 
