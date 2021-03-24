@@ -42,6 +42,9 @@
 - opencv
 - hdf5
 - vtk
+- cmake
+- gcc
+- g++
 ```
 
 - Clone the repository
@@ -65,7 +68,7 @@ $ cmake .
 - [x] Draw ellipses around face and eye,
 - [ ] Detect iris,
 - [ ] Detect pupil,
-- [ ] Draw ellipses around iris and eye,
+- [ ] Draw ellipses around iris and pupil,
 - [ ] Measure distance between eye frame and iris then get location,
 - [ ] Measure diameter of iris and pupil,
 - [ ] Implement ML algorithm for training based on emotion categories/wheel with processed images.
