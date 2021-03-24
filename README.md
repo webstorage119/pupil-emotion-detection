@@ -1,7 +1,7 @@
 ## Introduction
-> This repo contains code about my Bachelor's Thesis.
+> This repo contains codes of my Bachelor's Thesis.
 
-- Goal is to detect emotions using pupil measures and iris location with Machine Learning.
+- Goal is to detect emotions using pupil measures and iris location with Machine Learning (Caffe) and Image Processing (OpenCV).
 - Written in C++ (CXX17).
 
 ## Project Structure
@@ -12,17 +12,18 @@
 │   ├── haarcascade_eye.xml
 │   └── haarcascade_frontalface_alt.xml
 ├── data        
-│   ├── raw                                         => Raw Images
+│   ├── raw                                         => Raw Images (Dataset)
 │   │   └── happy
 │   │       ├── 001.jpg
 │   │       ├── 002.jpg
 │   │       ├── 003.jpg
 │   │       └── 004.jpg
-│   └── result                                      => Processed Images
-│       ├── 62A93ZEumcFdXBkV.jpg
-│       ├── Qa63I5Rt2O4XzkhE.jpg
-│       ├── sdPBtyKIbL3eqjTZ.jpg
-│       └── wBR4ve6zZGKoN7US.jpg
+│   └── result                                      => Processed Images for visual approval.
+│       └── happy
+│           ├── 62A93ZEumcFdXBkV.jpg
+│           ├── Qa63I5Rt2O4XzkhE.jpg
+│           ├── sdPBtyKIbL3eqjTZ.jpg
+│           └── wBR4ve6zZGKoN7US.jpg
 ├── include                                         => Header Files
 │   └── image.h
 ├── src                                             => Source Files
@@ -44,8 +45,15 @@
 - vtk
 - cmake
 - gcc
-- g++
+- cuda
+- caffe (cuda)
 ```
+
+- For Arch Linux you can type this to install dependencies.
+  - ```shell
+    $ sudo pacman -S opencv hdf5 vtk cmake gcc cuda
+    $ yay -S caffe-cuda # replace yay with your preferred aur helper
+    ```
 
 - Clone the repository
 
@@ -54,13 +62,16 @@ $ git clone https://github.com/redgroot/pupil-emotion-detection.git
 ```
 
 - Provide full paths in:
-    - main.cpp
+    - [main.cpp](main.cpp)
 
 
-- Run
-```shell
-$ cmake .
-```
+- Compile & Run
+  - ```shell
+    $ cmake .
+    $ make
+    ```
+  - Or if you are using [CLion](https://www.jetbrains.com/clion/) like me, open project then click to play button in the top right.
+
 ## Roadmap
 - [x] Load images,
 - [x] Detect face,
@@ -69,9 +80,11 @@ $ cmake .
 - [ ] Detect iris,
 - [ ] Detect pupil,
 - [ ] Draw ellipses around iris and pupil,
-- [ ] Measure distance between eye frame and iris then get location,
+- [ ] Measure distance between eye frame and iris to get location,
 - [ ] Measure diameter of iris and pupil,
-- [ ] Implement ML algorithm for training based on emotion categories/wheel with processed images.
+- [ ] Convert OpenCV Mat to Caffe Datum,
+- [ ] Create annotations,  
+- [ ] Implement ML algorithm (convolutional neural networks) for training based on emotion categories/wheel.
     
 ## License
 
