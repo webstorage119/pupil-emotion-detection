@@ -23,20 +23,18 @@ using cv::Mat;
 
 class Image {
 public:
-    string path;
-    string window_name;
     vector<string> image_path;
     vector<Mat> source_images;
     vector<Mat> pupils;
 
 public:
-    void getImages(const string &path);
+    void getImages(const string& importPath);
 
     void listImagePaths();
 
     void toImage();
 
-    void toPupil();
+    void toPupil(const string& faceCascadePath, const string& eyeCascadePath);
 
     void exportImages(const string& exportPath);
 

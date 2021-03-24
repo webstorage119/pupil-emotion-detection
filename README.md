@@ -1,8 +1,8 @@
 ## Introduction
 > This repo contains code about my Bachelor's Thesis.
 
-- Goal is detect emotions using pupil and iris location with Machine Learning. Have a long way to go! 💪
-- Written in C++ (CPP17)
+- Goal is to detect emotions using pupil measures and iris location with Machine Learning.
+- Written in C++ (CXX17).
 
 ## Project Structure
 ```
@@ -39,7 +39,7 @@
 - Install dependencies.
 
 ```
-- OpenCV
+- opencv
 - hdf5
 - vtk
 ```
@@ -50,9 +50,8 @@
 $ git clone https://github.com/redgroot/pupil-emotion-detection.git
 ```
 
-- Edit paths for your development environment in:
+- Provide full paths in:
     - main.cpp
-    - src/image.cpp
 
 
 - Run
@@ -60,15 +59,16 @@ $ git clone https://github.com/redgroot/pupil-emotion-detection.git
 $ cmake .
 ```
 ## Roadmap
-- [x] Load images
-- [x] Detect face
-- [x] Detect eye
-- [x] Draw ellipses around face and eye
-- [ ] Detect iris
-- [ ] Detect pupil
-- [ ] Measure distance between eye frame and iris then get location
-- [ ] Measure diameter of iris and pupil
-- [ ] Implement ML algorithm for training based on emotion categories/wheel with raw images.
+- [x] Load images,
+- [x] Detect face,
+- [x] Detect eye,
+- [x] Draw ellipses around face and eye,
+- [ ] Detect iris,
+- [ ] Detect pupil,
+- [ ] Draw ellipses around iris and eye,
+- [ ] Measure distance between eye frame and iris then get location,
+- [ ] Measure diameter of iris and pupil,
+- [ ] Implement ML algorithm for training based on emotion categories/wheel with processed images.
     
 ## License
 

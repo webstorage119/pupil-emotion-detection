@@ -10,17 +10,17 @@
 namespace fs = std::filesystem;
 
 /**
- * @brief Reads full image path and pushes to vector as string.
- * @param p (FUll path)
+ * @brief Reads full image path and pushes to image path vector as string.
+ * @param importPath
  */
-void Image::getImages(const string &p) {
-    for (const auto &entry : fs::directory_iterator(p)) {
+void Image::getImages(const string& importPath) {
+    for (const auto &entry : fs::directory_iterator(importPath)) {
         image_path.push_back(entry.path());
     }
 }
 
 /**
- * @brief Stdout full path of all images.
+ * @brief Stdout full path of all imported images.
  */
 void Image::listImagePaths() {
     for (const auto &i: image_path)
@@ -28,7 +28,7 @@ void Image::listImagePaths() {
 }
 
 /**
- * @brief Reads path from vector and turns into cv::Mat while loading the image then pushes to source images vector.
+ * @brief Reads image paths from vector and converts into cv::Mat while loading the image then pushes to source images vector.
  */
 void Image::toImage() {
     for (const auto &i: image_path)
@@ -106,13 +106,13 @@ Mat Image::makeCanvas(vector<Mat> &vecMat, int windowHeight, int nRows) {
 /**
  * @todo Detect Pupil.
  * @brief Load images from source_images vector. Find face then eyes then push to pupils vector.
- * @warning Replace paths to cascades for your configuration.
+ * @param faceCascadePath, eyeCascadePath
  */
-void Image::toPupil() {
-    cv::String eyes_cascade_path = "/home/panlazy/dev/pupil/asset/haarcascade_eye_tree_eyeglasses.xml";
-    cv::String face_cascade_path = "/home/panlazy/dev/pupil/asset/haarcascade_frontalface_alt.xml";
-    cv::CascadeClassifier eyes_cascade;
+void Image::toPupil(const string& faceCascadePath, const string& eyeCascadePath) {
+    const cv::String& face_cascade_path = faceCascadePath;
+    const cv::String& eyes_cascade_path = eyeCascadePath;
     cv::CascadeClassifier faces_cascade;
+    cv::CascadeClassifier eyes_cascade;
 
     if (!eyes_cascade.load(eyes_cascade_path)) {
         std::cout << "Error loading eyes cascade." << std::endl;
@@ -130,7 +130,7 @@ void Image::toPupil() {
         cv::cvtColor(source, gray, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(gray, gray);
 
-        // Detect face
+        // Detect face.
         faces_cascade.detectMultiScale(gray, face, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
         for (size_t i = 0; i < face.size(); i++) {
@@ -141,7 +141,7 @@ void Image::toPupil() {
             cv::Mat faceROI = gray(face[i]);
             std::vector<cv::Rect> eye;
 
-            // Each face, detect eyes.
+            // Detect eyes.
             eyes_cascade.detectMultiScale(faceROI, eye, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
             for (size_t j = 0; j < eye.size(); j++) {
@@ -156,6 +156,10 @@ void Image::toPupil() {
     }
 }
 
+/*
+ * @brief Exports processed images to given path.
+ * @param exportPath
+ */
 void Image::exportImages(const string &exportPath) {
     for (const auto &entry: fs::directory_iterator(exportPath)) {
         fs::remove_all(entry.path());
