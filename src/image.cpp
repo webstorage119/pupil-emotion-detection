@@ -123,28 +123,30 @@ void Image::toPupil() {
     }
 
     for (const auto &source: source_images) {
-       std::vector<cv::Rect> face;
-       cv::Mat gray;
+        std::vector<cv::Rect> face;
+        cv::Mat gray;
 
-       // Convert to grayscale.
-       cv::cvtColor(source, gray, cv::COLOR_BGR2GRAY);
-       cv::equalizeHist(gray, gray);
+        // Convert to grayscale.
+        cv::cvtColor(source, gray, cv::COLOR_BGR2GRAY);
+        cv::equalizeHist(gray, gray);
 
-       // Detect face
-       faces_cascade.detectMultiScale(gray, face, 1.1, 2, 0|cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+        // Detect face
+        faces_cascade.detectMultiScale(gray, face, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
         for (size_t i = 0; i < face.size(); i++) {
             cv::Point center(face[i].x + face[i].width * 0.5, face[i].y + face[i].height * 0.5);
-            cv::ellipse(source, center, cv::Size(face[i].width * 0.5, face[i].height * 0.5), 0, 0, 360, cv::Scalar(255, 0, 255), 4, 8, 0);
+            cv::ellipse(source, center, cv::Size(face[i].width * 0.5, face[i].height * 0.5), 0, 0, 360,
+                        cv::Scalar(255, 0, 255), 4, 8, 0);
 
             cv::Mat faceROI = gray(face[i]);
             std::vector<cv::Rect> eye;
 
             // Each face, detect eyes.
-            eyes_cascade.detectMultiScale(faceROI, eye, 1.1, 2, 0|cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+            eyes_cascade.detectMultiScale(faceROI, eye, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
             for (size_t j = 0; j < eye.size(); j++) {
-                cv::Point eyeCenter(face[i].x + eye[j].x + eye[j].width * 0.5, face[i].y + eye[j].y + eye[j].height * 0.5);
+                cv::Point eyeCenter(face[i].x + eye[j].x + eye[j].width * 0.5,
+                                    face[i].y + eye[j].y + eye[j].height * 0.5);
                 int radius = cvRound((eye[j].width + eye[j].height) * 0.25);
                 cv::circle(source, eyeCenter, radius, cv::Scalar(255, 0, 0), 4, 8, 0);
             }
@@ -153,22 +155,20 @@ void Image::toPupil() {
         pupils.push_back(source);
     }
 }
-// pupil cap
-// gozun etrafindaki deri ile pupil arasindaki mesafe
 
-void Image::exportImages(const string& exportPath) {
-    for (const auto& entry: fs::directory_iterator(exportPath)) {
+void Image::exportImages(const string &exportPath) {
+    for (const auto &entry: fs::directory_iterator(exportPath)) {
         fs::remove_all(entry.path());
     }
 
     std::cout << "Deleted old files." << std::endl;
 
-    for(const auto &i: pupils) {
+    for (const auto &i: pupils) {
         std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
         std::random_device rd;
         std::mt19937 generator(rd());
         std::shuffle(str.begin(), str.end(), generator);
-        string fileName = str.substr(0,16);
+        string fileName = str.substr(0, 16);
         cv::imwrite(exportPath + fileName + ".jpg", i);
         std::cout << "Exported to " + fileName + ".jpg" << std::endl;
     }
